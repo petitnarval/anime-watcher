@@ -1,9 +1,12 @@
-import parser
+import data_parser
 import web_requests
+import subprocess
+import sys
 
+if len(sys.argv) >= 2:
+    data_parser.PROVIDER = int(sys.argv[1])
 # EXTRACT THE DATA
-x = web_requests.get('https://neko-sama.fr/animes-search-vostfr.json?13-07-2024')
-animes = parser.get_anime_list(x)
+animes = data_parser.get_anime_list()
 
 # FILTER THE DATA
 
@@ -21,7 +24,6 @@ for i in range(len(animes)):
     a = animes[i]
     print(f"[{i}] {a[0]}: {a[1]}")
 
-
 choice = ""
 while True:
     try:
@@ -34,21 +36,48 @@ while True:
     except ValueError as e:
         print("Entree invalide:", e)
 
-
 # FILTER THE EPISODES
-x = web_requests.get(animes[choice][1])
-episodes = parser.get_episode_list(x)
+url = animes[choice][1]
+x = web_requests.get(url)
+seasons = data_parser.get_seasons(x,url)
 
+
+# ASK FOR CHOICE SEASON
 choice = ""
-while True:
-    try:
-        choice = int(input(f"Select an episode [1-{len(episodes)}] "))
+if len(seasons) == 1:
+    choice = 1
+else:
+    while True:
+        try:
+            choice = int(input(f"Select a season [1-{len(seasons)}] "))
 
-        if 0 <= choice <= len(episodes):
-            break
-        else:
-            raise ValueError("Too big")
-    except ValueError as e:
-        print("Entree invalide:", e)
+            if 0 <= choice <= len(seasons):
+                break
+            else:
+                raise ValueError("Too big")
+        except ValueError as e:
+            print("Entree invalide:", e)
 
-print(episodes[choice-1][1])
+url = seasons[choice-1][1]
+episodes = data_parser.get_episodes(url)
+
+
+# ASK FOR CHOICE EPISODES
+choice = ""
+if len(episodes) == 1:
+    choice = 1
+else:
+    while True:
+        try:
+            choice = int(input(f"Select an episode [1-{len(episodes)}] "))
+
+            if 0 <= choice <= len(episodes):
+                break
+            else:
+                raise ValueError("Too big")
+        except ValueError as e:
+            print("Entree invalide:", e)
+episode = episodes[choice-1]
+
+
+subprocess.call(f'mpv {episode}', shell=True)
