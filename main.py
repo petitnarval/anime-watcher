@@ -22,7 +22,7 @@ animes = list(filter(filter_animes, animes))
 # Print the available animes
 for i in range(len(animes)):
     a = animes[i]
-    print(f"[{i}] {a[0]}: {a[1]}")
+    print(f"[{i}] {a[0]}")
 
 choice = ""
 while True:
