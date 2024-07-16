@@ -26,7 +26,6 @@ def ask_for_int(message, min_value=0, max_value=math.inf, default=None):
 
 
 def ask_for_character(message, domain, default=None):
-
     while True:
         try:
             choice = input(message)

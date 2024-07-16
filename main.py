@@ -1,9 +1,17 @@
 import subprocess
+
 from thefuzz import fuzz
+
 import colors
 import data_parser
 import user_interface
 import web_requests
+
+
+def start_episode(episode):
+    print(f"Loading Episode...")
+    subprocess.call(f'mpv {episode}', shell=True)
+
 
 options = "a"
 choice = {
@@ -26,7 +34,7 @@ while True:
 
     # ASK FOR PROVIDER
     if option == "p":
-        data_parser.PROVIDER = user_interface.ask_for_int("Select a provider (default: 2): ", default=2)
+        data_parser.PROVIDER = user_interface.ask_for_int("Select a provider (default: 0): ", default=0)
 
     # ASK FOR ANIME
     elif option == "a":
@@ -75,17 +83,15 @@ while True:
 
         # ASK FOR EPISODE
         if len(episodes) == 1:
-            choice["episode"] = 1
+            choice["episode"] = 0
         else:
             choice["episode"] = user_interface.ask_for_int(
                 f"Select an episode {colors.BLUE}[1-{len(episodes)}]{colors.RESET} : ",
                 min_value=1,
                 max_value=len(episodes)) - 1
-        episode = episodes[choice["episode"]]
 
-        # START THE EPISODE
-        print(f"Loading Episode...")
-        subprocess.call(f'mpv {episode}', shell=True)
+        episode = episodes[choice["episode"]]
+        start_episode(episode)
 
     elif option == "n":
         choice["episode"] += 1

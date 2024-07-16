@@ -1,9 +1,11 @@
+import re
+
 from bs4 import BeautifulSoup
 from pyjsparser import parse
-import re
+
 import web_requests
 
-PROVIDER = 2
+PROVIDER = 0
 
 
 def get_anime_list():
