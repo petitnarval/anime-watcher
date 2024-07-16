@@ -1,8 +1,11 @@
 from bs4 import BeautifulSoup
 from pyjsparser import parse
+
 import web_requests
 
 PROVIDER = 0
+
+
 def get_anime_list():
     """Extract the list of animes from a web page"""
     animes = []
@@ -24,7 +27,6 @@ def get_anime_list_from_page(x):
 
     animes = []
     for anime in x:
-
         data = anime.find_all('a')[0]
 
         name = data.find_all('h1')[0].text.strip().lower()
@@ -43,10 +45,10 @@ def get_seasons(x, url):
     x = x.find_all("div", {"class": "flex flex-wrap overflow-y-hidden justify-start bg-slate-900 bg-opacity-70 rounded "
                                     "mt-2 h-auto"})[0]  # Extract the list of seasons
     x = x.find_all("script")[0].text.strip()
-    return get_seasons_script(x,url)
+    return get_seasons_script(x, url)
 
 
-def get_seasons_script(s,url):
+def get_seasons_script(s, url):
     seasons = []
     s = s.split("\n")
     s = s[1:]
