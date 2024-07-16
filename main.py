@@ -15,7 +15,7 @@ choice = {
 # EXTRACT THE DATA
 print("Loading data...")
 animes_list = data_parser.get_anime_list()
-print(animes_list)
+
 while True:
 
     if len(options) >= 1:
