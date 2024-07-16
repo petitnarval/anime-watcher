@@ -1,5 +1,5 @@
 import subprocess
-
+from thefuzz import fuzz
 import colors
 import data_parser
 import user_interface
@@ -15,7 +15,7 @@ choice = {
 # EXTRACT THE DATA
 print("Loading data...")
 animes_list = data_parser.get_anime_list()
-
+print(animes_list)
 while True:
 
     if len(options) >= 1:
@@ -32,7 +32,9 @@ while True:
     elif option == "a":
         # FILTER THE DATA
         query = input("What do you want to watch ? ").lower().strip()
-        animes = list(filter(lambda anime: query in anime[0], animes_list))
+        animes = list(filter(
+            lambda anime: fuzz.partial_ratio(anime[0], query) >= 80,
+            animes_list))
 
         # PRINT THE AVAILABLE ANIMES
         for i in range(len(animes)):
@@ -84,6 +86,23 @@ while True:
         # START THE EPISODE
         print(f"Loading Episode...")
         subprocess.call(f'mpv {episode}', shell=True)
+
+    elif option == "n":
+        choice["episode"] += 1
+        # CHANGE SEASON IF TRY TO GO NEXT AT THE LAST EPISODE
+        if choice["episode"] == len(episodes):
+            choice["season"] += 1
+            choice["episode"] = 0
+
+        if choice["season"] == len(seasons):
+            print("There is nothing else to watch !")
+            options = "a"
+            continue
+
+        url = seasons[choice["season"]][1]
+        episodes = data_parser.get_episodes(url)
+        episode = episodes[choice["episode"]]
+        start_episode(episode)
 
     # QUIT
     elif option == "q":

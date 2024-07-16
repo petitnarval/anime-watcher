@@ -1,9 +1,9 @@
 from bs4 import BeautifulSoup
 from pyjsparser import parse
-
+import re
 import web_requests
 
-PROVIDER = 0
+PROVIDER = 2
 
 
 def get_anime_list():
@@ -40,15 +40,13 @@ def get_anime_list_from_page(x):
 
 def get_seasons(x, url):
     """Extract the list of seasons from a web page"""
-
-    x = BeautifulSoup(x, "html.parser")  # Soupify the world
-    x = x.find_all("div", {"class": "flex flex-wrap overflow-y-hidden justify-start bg-slate-900 bg-opacity-70 rounded "
-                                    "mt-2 h-auto"})[0]  # Extract the list of seasons
-    x = x.find_all("script")[0].text.strip()
+    x = BeautifulSoup(x, "html.parser")  # SOUPIFY THE WORLD
+    x = x.find_all("script", string=re.compile("panneauanime"))[1]
     return get_seasons_script(x, url)
 
 
 def get_seasons_script(s, url):
+    s = s.text.strip()
     seasons = []
     s = s.split("\n")
     s = s[1:]
