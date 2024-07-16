@@ -35,7 +35,7 @@ For some people, this command doesn't work, and they need to use `python main.py
 If you want to start Anime Watcher from aniwhere in your system (without having to change directory), follow these steps.
 
 First, go in a folder that is listed in your path. You can use WinKey > env > Path to see the list of path folders or add one.
-Then, create a file named `anime-watcher.bat` and write the following line into it:
+Then, create a file named `anime-watcher.bat` or whatever name you want (it will be the command to run in the cli) and write the following line into it:
 ```bat
 @START py [path]main.py
 ```

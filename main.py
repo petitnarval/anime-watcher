@@ -1,70 +1,105 @@
 import subprocess
 
+import colors
 import data_parser
 import user_interface
 import web_requests
 
-# PROMPT FOR PROVIDER
-data_parser.PROVIDER = user_interface.ask_for_int("Select a provider (default: 0): ", default=0)
+options = "a"
+choice = {
+    "anime": None,
+    "season": None,
+    "episode": None,
+}
 
 # EXTRACT THE DATA
 print("Loading data...")
-animes = data_parser.get_anime_list()
+animes_list = data_parser.get_anime_list()
 
-
-# FILTER THE DATA
-query = input("What do you want to watch ? ").lower().strip()
-animes = list(filter(lambda anime: query in anime[0], animes))
-
-
-# PRINT THE AVAILABLE ANIMES
-for i in range(len(animes)):
-    a = animes[i]
-    print(f"[{i}] {a[0]}")
-
-
-# PROMPTS THE USER TO CHOSE AN ANIME
-choice = ""
 while True:
-    try:
-        choice = int(input("Select an anime: "))
 
-        if 0 <= choice < len(animes):
-            break
+    if len(options) >= 1:
+        option = options[0]
+        options = options[1:]
+    else:
+        option = None
+
+    # ASK FOR PROVIDER
+    if option == "p":
+        data_parser.PROVIDER = user_interface.ask_for_int("Select a provider (default: 2): ", default=2)
+
+    # ASK FOR ANIME
+    elif option == "a":
+        # FILTER THE DATA
+        query = input("What do you want to watch ? ").lower().strip()
+        animes = list(filter(lambda anime: query in anime[0], animes_list))
+
+        # PRINT THE AVAILABLE ANIMES
+        for i in range(len(animes)):
+            a = animes[i]
+            print(f"{colors.MAGENTA}[{i}]{colors.RESET} {a[0]}")
+
+        # PROMPTS THE USER TO CHOSE AN ANIME
+        if len(animes) == 1:
+            choice["anime"] = 0
         else:
-            raise ValueError("Too big")
-    except ValueError as e:
-        print("Invalid input:", e)
+            choice["anime"] = user_interface.ask_for_int(message="Choose a Anime", max_value=len(animes) - 1)
 
+        options = "s"
 
-# FILTER THE EPISODES
-url = animes[choice][1]
-x = web_requests.get(url)
-seasons = data_parser.get_seasons(x, url)
+    # ASK FOR SEASON
+    elif option == "s":
 
+        # FILTER THE EPISODES
+        url = animes[choice["anime"]][1]
+        x = web_requests.get(url)
+        seasons = data_parser.get_seasons(x, url)
 
-# ASK FOR SEASON
-choice = ""
-if len(seasons) == 1:
-    choice = 1
-else:
-    choice = user_interface.ask_for_int(f"Chose a season [1-{len(seasons)}] : ",
-                                        min_value=1,
-                                        max_value=len(seasons))
+        # ASK FOR SEASON
+        if len(seasons) == 1:
+            choice["season"] = 0
+        else:
+            choice["season"] = user_interface.ask_for_int(
+                f"Chose a season {colors.YELLOW}[1-{len(seasons)}]{colors.RESET} : ",
+                min_value=1,
+                max_value=len(seasons)) - 1
 
-url = seasons[choice - 1][1]
-episodes = data_parser.get_episodes(url)
+        options = "e"
 
+    # ASK FOR EPISODE
+    elif option == "e":
+        url = seasons[choice["season"]][1]
+        episodes = data_parser.get_episodes(url)
 
-# ASK FOR EPISODE
-choice = ""
-if len(episodes) == 1:
-    choice = 1
-else:
-    choice = user_interface.ask_for_int(f"Select an episode [1-{len(episodes)}] : ",
-                                        min_value=1,
-                                        max_value=len(episodes))
-episode = episodes[choice - 1]
+        # ASK FOR EPISODE
+        if len(episodes) == 1:
+            choice["episode"] = 1
+        else:
+            choice["episode"] = user_interface.ask_for_int(
+                f"Select an episode {colors.BLUE}[1-{len(episodes)}]{colors.RESET} : ",
+                min_value=1,
+                max_value=len(episodes)) - 1
+        episode = episodes[choice["episode"]]
 
-# START THE EPISODE
-subprocess.call(f'mpv {episode}', shell=True)
+        # START THE EPISODE
+        print(f"Loading Episode...")
+        subprocess.call(f'mpv {episode}', shell=True)
+
+    # QUIT
+    elif option == "q":
+        break
+
+    elif option is None:
+
+        # ASK FOR NEW ACTIONS
+        print(
+            "Possible actions:\n"
+            f"{colors.BLUE}[p]{colors.RESET} change provider\n"
+            f"{colors.BLUE}[a]{colors.RESET} change anime\n"
+            f"{colors.BLUE}[s]{colors.RESET} change season\n"
+            f"{colors.BLUE}[e]{colors.RESET} change episode\n"
+            f"{colors.CYAN}[n]{colors.RESET} next episode\n"
+            f"{colors.BLUE}[q]{colors.RESET} quit\n"
+        )
+
+        options = user_interface.ask_for_character("What do you want to do ? ", "pasenq")

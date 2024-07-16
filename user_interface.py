@@ -23,3 +23,21 @@ def ask_for_int(message, min_value=0, max_value=math.inf, default=None):
                 raise ValueError("Too big")
         except ValueError as e:
             print("Invalid input:", e)
+
+
+def ask_for_character(message, domain, default=None):
+
+    while True:
+        try:
+            choice = input(message)
+            if default is not None and choice == "":
+                return default
+
+            if len(choice) != 1:
+                raise ValueError("Enter a Character")
+            if choice in domain:
+                return choice
+            else:
+                raise ValueError("Too big")
+        except ValueError as e:
+            print("Invalid input:", e)
