@@ -8,7 +8,11 @@ import user_interface
 import web_requests
 import config
 
-PROVIDER = 0
+
+def optimised_link(url):
+    if "vidmoly" in url:
+        return url[:19] + url[25:]
+    return url
 
 
 def get_anime_list():
@@ -101,7 +105,7 @@ def get_episodes(url):
     # If vidmoly is found, return it
     if config.PREFER_VIDMOLY:
         if len(data_filtered) == 1:
-            return data_filtered[0]
+            return list(map(optimised_link, data_filtered[0]))
 
     # Else, use the provider
     if config.PROVIDER >= (len(data)):
@@ -110,4 +114,4 @@ def get_episodes(url):
             f"Please select another provider [0 - {len(data) - 1}] :",
             max_value=len(data) - 1,
             default=0)
-    return data[config.PROVIDER]
+    return list(map(optimised_link, data_filtered[config.PROVIDER]))
