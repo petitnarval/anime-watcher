@@ -3,6 +3,7 @@ import subprocess
 from thefuzz import fuzz
 
 import colors
+import config
 import data_parser
 import user_interface
 import web_requests
@@ -34,15 +35,18 @@ while True:
 
     # ASK FOR PROVIDER
     if option == "p":
+        config.PREFER_VIDMOLY = False
         data_parser.PROVIDER = user_interface.ask_for_int("Select a provider (default: 0): ", default=0)
 
     # ASK FOR ANIME
     elif option == "a":
-        # FILTER THE DATA
-        query = input("What do you want to watch ? ").lower().strip()
-        animes = list(filter(
-            lambda anime: fuzz.partial_ratio(anime[0], query) >= 80,
-            animes_list))
+        animes = []
+        while len(animes) == 0:
+            # FILTER THE DATA
+            query = input("What do you want to watch ? ").lower().strip()
+            animes = list(filter(
+                lambda anime: fuzz.partial_ratio(anime[0], query) >= 80,
+                animes_list))
 
         # PRINT THE AVAILABLE ANIMES
         for i in range(len(animes)):
@@ -53,7 +57,7 @@ while True:
         if len(animes) == 1:
             choice["anime"] = 0
         else:
-            choice["anime"] = user_interface.ask_for_int(message="Choose a Anime", max_value=len(animes) - 1)
+            choice["anime"] = user_interface.ask_for_int(message="Choose a anime: ", max_value=len(animes) - 1)
 
         options = "s"
 

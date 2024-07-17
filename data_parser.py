@@ -3,7 +3,10 @@ import re
 from bs4 import BeautifulSoup
 from pyjsparser import parse
 
+import colors
+import user_interface
 import web_requests
+import config
 
 PROVIDER = 0
 
@@ -13,8 +16,8 @@ def get_anime_list():
     animes = []
     for i in range(1, 33):
         x = web_requests.get(f"https://anime-sama.fr/catalogue/index.php?page={i}")
-        l = get_anime_list_from_page(x)
-        animes.extend(l)
+        anime_list = get_anime_list_from_page(x)
+        animes.extend(anime_list)
     return animes
 
 
@@ -68,17 +71,43 @@ def get_seasons_script(s, url):
 
 
 def get_episodes(url):
-    url = url + "/episodes.js"
-    x = web_requests.get(url)
-    x = parse(x)
-    x = x['body']
-    x = x[PROVIDER]
-    x = x['declarations']
-    x = x[0]
-    x = x['init']
-    x = x['elements']
-    x = list(map(
-        lambda e: e['value'],
-        x
+    url = url + "/episodes.js"  # Build the url
+    data = web_requests.get(url)
+    data = parse(data)  # Parse the js
+    data = data['body']  # Get the code
+    data = data[:-1]  # Remove the last element (empty statement)
+
+    # Get the list of providers
+    data = list(map(
+        lambda a: a["declarations"][0]["init"]["elements"],
+        data
     ))
-    return x
+
+    # Extract the links
+    data = list(map(  # For each provider
+        lambda provider: list(map(  # For each element
+            lambda link: link["value"],  # Map to the link
+            provider
+        )),
+        data
+    ))
+
+    # Search for vidmoly
+    data_filtered = list(filter(
+        lambda link: "vidmoly" in link[0],
+        data
+    ))
+
+    # If vidmoly is found, return it
+    if config.PREFER_VIDMOLY:
+        if len(data_filtered) == 1:
+            return data_filtered[0]
+
+    # Else, use the provider
+    if config.PROVIDER >= (len(data)):
+        print(f"{colors.RED}The provider N° {config.PROVIDER} doesn't exist for this anime !{colors.RESET}")
+        config.PROVIDER = user_interface.ask_for_int(
+            f"Please select another provider [0 - {len(data) - 1}] :",
+            max_value=len(data) - 1,
+            default=0)
+    return data[config.PROVIDER]
