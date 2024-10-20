@@ -7,7 +7,7 @@ import colors
 import user_interface
 import web_requests
 import config
-
+import time
 
 def optimised_link(url):
     if "vidmoly" in url:
@@ -17,11 +17,22 @@ def optimised_link(url):
 
 def get_anime_list():
     """Extract the list of animes from a web page"""
+    pages = 33
     animes = []
-    for i in range(1, 33):
+    for i in range(1, pages):
+        # Loading bar
+        bar_begin = "*"*(i-1)
+        bar_end = "."*(pages-i+1)
+        print(f"\r{colors.GREEN}|{bar_begin}{colors.RESET}{bar_end}{colors.GREEN}|", end="")
+
         x = web_requests.get(f"https://anime-sama.fr/catalogue/index.php?page={i}")
         anime_list = get_anime_list_from_page(x)
         animes.extend(anime_list)
+
+        time.sleep(0.1)
+
+    print(f"\r{'*'*pages}", end="")
+    print(colors.RESET)
     return animes
 
 
