@@ -9,6 +9,7 @@ import web_requests
 import config
 import time
 
+
 def optimised_link(url):
     if "vidmoly" in url:
         return url[:19] + url[25:]
@@ -17,9 +18,9 @@ def optimised_link(url):
 
 def get_anime_list():
     """Extract the list of animes from a web page"""
-    pages = 33
+    pages = 23
     animes = []
-    for i in range(1, pages):
+    for i in range(21, pages):
         # Loading bar
         bar_begin = "*"*(i-1)
         bar_end = "."*(pages-i+1)
@@ -125,4 +126,4 @@ def get_episodes(url):
             f"Please select another provider [0 - {len(data) - 1}] :",
             max_value=len(data) - 1,
             default=0)
-    return list(map(optimised_link, data_filtered[config.PROVIDER]))
+    return list(map(optimised_link, data[config.PROVIDER]))

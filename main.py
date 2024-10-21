@@ -48,15 +48,14 @@ while True:
                 lambda anime: fuzz.partial_ratio(anime[0], query) >= 80,
                 animes_list))
 
-        # PRINT THE AVAILABLE ANIMES
-        for i in range(len(animes)):
-            a = animes[i]
-            print(f"{colors.MAGENTA}[{i}]{colors.RESET} {a[0]}")
-
         # PROMPTS THE USER TO CHOSE AN ANIME
         if len(animes) == 1:
             choice["anime"] = 0
         else:
+            # PRINT THE AVAILABLE ANIMES
+            for i in range(len(animes)):
+                a = animes[i]
+                print(f"{colors.MAGENTA}[{i}]{colors.RESET} {a[0]}")
             choice["anime"] = user_interface.ask_for_int(message="Choose a anime: ", max_value=len(animes) - 1)
 
         options = "s"
