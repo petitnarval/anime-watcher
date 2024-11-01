@@ -9,8 +9,14 @@ import user_interface
 import web_requests
 
 
-def start_episode(episode):
-    print(f"Loading Episode...")
+def start_episode(episode, number):
+    """Plays an episode
+
+    :param episode: the episode link
+    :param number: the episode number for display
+    :return:
+    """
+    print(f"Loading Episode {number}...")
     subprocess.call(f'mpv {episode}', shell=True)
 
 
@@ -94,7 +100,7 @@ while True:
                 max_value=len(episodes)) - 1
 
         episode = episodes[choice["episode"]]
-        start_episode(episode)
+        start_episode(episode, choice["episode"]+1)
 
     elif option == "n":
         choice["episode"] += 1
@@ -111,7 +117,7 @@ while True:
         url = seasons[choice["season"]][1]
         episodes = data_parser.get_episodes(url)
         episode = episodes[choice["episode"]]
-        start_episode(episode)
+        start_episode(episode, choice["episode"]+1)
 
     # QUIT
     elif option == "q":

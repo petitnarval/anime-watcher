@@ -18,9 +18,9 @@ def optimised_link(url):
 
 def get_anime_list():
     """Extract the list of animes from a web page"""
-    pages = 23
+    pages = 33
     animes = []
-    for i in range(21, pages):
+    for i in range(1, pages+1):
         # Loading bar
         bar_begin = "*"*(i-1)
         bar_end = "."*(pages-i+1)
