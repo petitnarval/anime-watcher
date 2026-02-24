@@ -12,7 +12,7 @@ import time
 
 def optimised_link(url):
     if "vidmoly" in url:
-        return url[:19] + url[25:]
+            url = url[:16] + "biz" + url[18:]
     return url
 
 
@@ -26,7 +26,7 @@ def get_anime_list():
         bar_end = "."*(pages-i+1)
         print(f"\r{colors.GREEN}|{bar_begin}{colors.RESET}{bar_end}{colors.GREEN}|", end="")
 
-        x = web_requests.get(f"https://anime-sama.fr/catalogue/index.php?page={i}")
+        x = web_requests.get(f"https://anime-sama.tv/catalogue/index.php?page={i}")
         anime_list = get_anime_list_from_page(x)
         animes.extend(anime_list)
 
@@ -39,18 +39,14 @@ def get_anime_list():
 
 def get_anime_list_from_page(x):
     x = BeautifulSoup(x, "html.parser")  # Soupify the world
-    x = x.find_all("div", {"id": "result_catalogue"})[0]  # Extract the list of animes
-    x1 = x.find_all('div', {'class': 'anime'})
-    x2 = x.find_all('div', {'class': 'anime,'})
-
+    x = x.find_all("div", {"id": "list_catalog"})[0]  # Extract the list of animes
+    x1 = x.find_all('div', {'class': 'shrink-0 catalog-card card-base'})
     x = x1
-    x.extend(x2)
 
     animes = []
     for anime in x:
         data = anime.find_all('a')[0]
-
-        name = data.find_all('h1')[0].text.strip().lower()
+        name = data.find_all('h2')[0].text.strip().lower()
         link = data["href"]
 
         line = (name, link)
