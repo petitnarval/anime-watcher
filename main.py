@@ -28,9 +28,12 @@ if __name__ == '__main__':
         "episode": None,
     }
 
-    # EXTRACT THE DATA
-    print("Loading data...")
-    animes_list = data_parser.get_anime_list()
+# TODO: ascii art style
+    print(
+        """
+    -----------------
+    | ANIME WATCHER |
+    -----------------""")
 
     while True:
 
@@ -51,9 +54,8 @@ if __name__ == '__main__':
             while len(animes) == 0:
                 # FILTER THE DATA
                 query = input("What do you want to watch ? ").lower().strip()
-                animes = list(filter(
-                    lambda anime: fuzz.partial_ratio(anime[0], query) >= 80,
-                    animes_list))
+                x = f"https://anime-sama.tv/catalogue/?search={query.replace(' ', '+')}"
+                animes = data_parser.get_anime_list_from_page(web_requests.get(x))
 
             # PROMPTS THE USER TO CHOSE AN ANIME
             if len(animes) == 1:
@@ -118,7 +120,6 @@ if __name__ == '__main__':
             url = seasons[choice["season"]][1]
             episodes = data_parser.get_episodes(url)
             episode = episodes[choice["episode"]]
-            print(episode)
             start_episode(episode, choice["episode"] + 1)
 
         # QUIT
