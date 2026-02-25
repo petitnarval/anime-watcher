@@ -1,14 +1,27 @@
 # ANIME WATCHER
 
-## What is this ?
+## What is this ? ⭐
+
+
+
+![alt text](Presentation.png "anime-watcher")
 
 Anime Watcher is a python program that allows you to watch anime in your terminal like a true nerddd
 
-## How to use it
+## Installation 🚀
+### Prerequisites
+* A supported platform:
+  * Windows
+  * MacOS
+  * Linux
+  * Android (via [Termux](https://termux.dev/en/))
+  * IOS (via [iSH Shell](https://ish.app/))
+* [python](https://ish.app/) (required with **pip** for sure and make sure you can run it through your terminal)
+* [mpv](https://mpv.io/installation/) (**Required** media player)
 
 ### Install python
 
-You need to install [Python 3.12.4](https://www.python.org/downloads/release/python-3124/). Make sure you add it to the
+You need to install [Python 3.12.4](https://www.python.org/downloads/release/python-3124/) or any other version realeased after. Make sure you add it to the
 path and install PIP (which are options to check during the installation process).
 
 ### Install MPV
@@ -30,32 +43,16 @@ scoop install main/yt-dlp
 ```
 
 ### Install Anime Watcher
-
-Clone this repo / download it as a zip file and unzip it somewhere on your drive.
-Run the `dependrancy.bat` file to install the python dependencies.
-
-Open a CLI, place yourself in the directory where Anime Watcher is installed, and run Anime Watcher using the followin
-command: `py main.py`.
-For some people, this command doesn't work, and they need to use `python main.py`. Test both of them to see which one
-works on your system.
-
-### Adding Anime Watcher as a command in your CLI (optional)
-
-If you want to start Anime Watcher from aniwhere in your system (without having to change directory), follow these
-steps.
-
-First, go in a folder that is listed in your path. You can use WinKey > env > Path to see the list of path folders or
-add one.
-Then, create a file named `anime-watcher.bat` or whatever name you want (it will be the command to run in the cli) and
-write the following line into it:
-
+With the prerequisites installed, anime-watcher-fr can be installed via the pip command on all platform
+with Python version 3.10 or above.
 ```bat
-@START py [path]main.py
+pip install anime-watcher-fr
 ```
 
-Replace [path] with the path in which is located Anime Watcher on your drive. For
-example: `@START py D:\Documents\Dev\anime-watcher\main.py`
+### Usage 🎰
 
-As in the last step, you may have to use `python` instead of `py` for it to work.
+[usage.mp4](anime-watcher.mp4)
 
-Then, open a CLI and type `anime-watcher`, that's it !
+anime-watcher comes packaged with a CLI interface via the ```anime-watcher```
+command you that you can use in your respective terminal.
+
