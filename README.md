@@ -51,7 +51,7 @@ pip install anime-watcher-fr
 
 ### Usage 🎰
 
-[usage.mp4](anime-watcher.mp4)
+https://github.com/user-attachments/assets/36df723c-d7c1-4c19-99b0-28d93d32f2f0
 
 anime-watcher comes packaged with a CLI interface via the ```anime-watcher```
 command that you can use in your respective terminal.
