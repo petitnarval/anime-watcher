@@ -6,7 +6,7 @@
 
 ![alt text](Presentation.png "anime-watcher")
 
-Anime Watcher is a python program that allows you to watch anime in your terminal like a true nerddd
+Anime Watcher is a python program that allows you to watch anime in french in your terminal like a true nerddd
 
 ## Installation 🚀
 ### Prerequisites
@@ -54,5 +54,5 @@ pip install anime-watcher-fr
 [usage.mp4](anime-watcher.mp4)
 
 anime-watcher comes packaged with a CLI interface via the ```anime-watcher```
-command you that you can use in your respective terminal.
+command that you can use in your respective terminal.
 
